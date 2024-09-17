@@ -12,8 +12,20 @@ class Auth:
         pass
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """Returns False"""
-        return False
+        """Defines routes that require authentication
+
+        Returns:
+            True if auth required, False otherwise
+        """
+        if not path or not excluded_paths:
+            return True
+
+        path += "/" if not path.endswith("/") else ""
+
+        if path in excluded_paths:
+            return False
+
+        return True
 
     def authorization_header(self, request=None) -> str:
         """Returns None"""
