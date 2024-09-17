@@ -5,7 +5,7 @@ Route module for the API
 
 from os import getenv
 from api.v1.views import app_views
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 
 
@@ -31,6 +31,31 @@ app.register_error_handler(403, forbidden_res)
 app.register_error_handler(404, not_found)
 
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
+
+auth = None
+if getenv("AUTH_TYPE"):
+    from api.v1.auth.auth import Auth
+
+    auth = Auth()
+
+
+@app.before_request
+def check_auth():
+    """Validates requests on the API"""
+    exclude = [
+        "/api/v1/status/",
+        "/api/v1/unauthorized/",
+        "/api/v1/forbidden/",
+    ]
+    if not (auth and auth.require_auth(request.path, exclude)):
+        return
+
+    authorization = auth.authorization_header(request)
+    if not authorization:
+        abort(401)
+    if not auth.current_user(request):
+        abort(403)
+
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
