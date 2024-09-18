@@ -47,7 +47,7 @@ class BasicAuth(Auth):
         """
 
         try:
-            email, pwd = decoded_base64_authorization_header.split(":")
+            email, pwd = decoded_base64_authorization_header.split(":", 1)
             return email, pwd
         except Exception:
             return None, None
