@@ -3,7 +3,7 @@
 
 from api.v1.auth.auth import Auth
 from models.user import User
-from typing import TypeVar
+from typing import TypeVar, Tuple
 import base64
 
 
@@ -16,7 +16,6 @@ class BasicAuth(Auth):
     ) -> str:
         """Returns the Base64 part of the Authorization header
         for Basic Authentication"""
-
         if isinstance(authorization_header, str):
             tag = "Basic "
             if authorization_header.startswith(tag):
@@ -39,22 +38,19 @@ class BasicAuth(Auth):
             return None
 
     def extract_user_credentials(
-        self, decoded_base64_authorization_header: str
-    ) -> (str, str):
+        self,
+        decoded_base64_authorization_header: str,
+    ) -> Tuple[str, str]:
         """Returns the user email and password from the Base64 decoded value.
         Returns
             (email, password)
         """
-        email, pwd = None, None
-        if not isinstance(decoded_base64_authorization_header, str):
-            return email, pwd
 
         try:
             email, pwd = decoded_base64_authorization_header.split(":")
+            return email, pwd
         except Exception:
-            pass
-
-        return email, pwd
+            return None, None
 
     def user_object_from_credentials(
         self,
@@ -73,3 +69,11 @@ class BasicAuth(Auth):
         if user.is_valid_password(user_pwd):
             return user
         return None
+
+    def current_user(self, request=None) -> TypeVar("User"):
+        """Retrieves the user associated with the request"""
+        auth_header = self.authorization_header(request)
+        b64_auth = self.extract_base64_authorization_header(auth_header)
+        auth_string = self.decode_base64_authorization_header(b64_auth)
+        email, pwd = self.extract_user_credentials(auth_string)
+        return self.user_object_from_credentials(email, pwd)
