@@ -9,9 +9,6 @@ from pathlib import PurePath
 class Auth:
     """Contains methods for handling API authentication"""
 
-    def __init__(self):
-        pass
-
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """Defines routes that require authentication
 
