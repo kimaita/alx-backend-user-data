@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Implements API HTTP authentication"""
 
+from flask import request
 from typing import List, TypeVar
 from pathlib import PurePath
 
