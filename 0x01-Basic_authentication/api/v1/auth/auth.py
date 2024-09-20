@@ -3,7 +3,7 @@
 
 from flask import request
 from typing import List, TypeVar
-from pathlib import PurePath
+#from pathlib import PurePath
 
 
 class Auth:
@@ -26,7 +26,7 @@ class Auth:
         if path in excluded_paths:
             return False
 
-        return all(not PurePath(path).match(excl) for excl in excluded_paths)
+        #return all(not PurePath(path).match(excl) for excl in excluded_paths)
 
     def authorization_header(self, request=None) -> str:
         """Returns the request's `Authorization Header` or None"""
