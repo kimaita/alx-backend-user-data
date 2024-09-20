@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """Implements API HTTP authentication"""
 
-from flask import request
 from typing import List, TypeVar
-from pathlib import PurePath
 
 
 class Auth:
@@ -20,10 +18,15 @@ class Auth:
 
         path += "/" if not path.endswith("/") else ""
 
-        return all(not PurePath(path).match(excl) for excl in excluded_paths)
+        for ep in excluded_paths:
+            if ep == path or ep.endswith("*") and path.startswith(ep[:-1]):
+                return False
+
+        return True
 
     def authorization_header(self, request=None) -> str:
         """Returns the request's `Authorization Header` or None"""
+
         if not request:
             return None
 
