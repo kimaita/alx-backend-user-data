@@ -50,13 +50,14 @@ def check_auth():
         # "/api/v1/status/",
         "/api/v1/unauthorized/",
         "/api/v1/forbidden/",
+        "/api/v1/auth_session/login/",
     ]
     if not (auth and auth.require_auth(request.path, exclude)):
         return
 
     authorization = auth.authorization_header(request)
 
-    if not authorization:
+    if not (authorization and auth.session_cookie(request)):
         abort(401)
 
     user = auth.current_user(request)
