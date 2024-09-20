@@ -7,6 +7,7 @@ from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
+from importlib import import_module
 
 
 def not_found(error) -> str:
@@ -32,20 +33,13 @@ app.register_error_handler(404, not_found)
 
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
-auth = None
+auths = {
+    "auth": import_module("api.v1.auth.auth").Auth(),
+    "basic_auth": import_module("api.v1.auth.basic_auth").BasicAuth(),
+    "session_auth": import_module("api.v1.auth.session_auth").SessionAuth(),
+}
 auth_type = getenv("AUTH_TYPE")
-if auth_type == "auth":
-    from api.v1.auth.auth import Auth
-
-    auth = Auth()
-elif auth_type == "basic_auth":
-    from api.v1.auth.basic_auth import BasicAuth
-
-    auth = BasicAuth()
-elif auth_type == "session_auth":
-    from api.v1.auth.session_auth import SessionAuth
-
-    auth = SessionAuth()
+auth = auths.get(auth_type) if auth_type else None
 
 
 @app.before_request
