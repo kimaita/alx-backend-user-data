@@ -19,7 +19,7 @@ class BasicAuth(Auth):
         if isinstance(authorization_header, str):
             tag = "Basic "
             if authorization_header.startswith(tag):
-                return authorization_header[len(tag) :]
+                return authorization_header[len(tag):]
 
         return None
 
