@@ -9,6 +9,9 @@ from pathlib import PurePath
 class Auth:
     """Contains methods for handling API authentication"""
 
+    def __init__(self):
+        pass
+
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """Defines routes that require authentication
 
@@ -20,10 +23,14 @@ class Auth:
 
         path += "/" if not path.endswith("/") else ""
 
+        if path in excluded_paths:
+            return False
+
         return all(not PurePath(path).match(excl) for excl in excluded_paths)
 
     def authorization_header(self, request=None) -> str:
         """Returns the request's `Authorization Header` or None"""
+
         if not request:
             return None
 
