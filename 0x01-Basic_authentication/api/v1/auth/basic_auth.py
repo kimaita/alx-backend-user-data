@@ -19,7 +19,7 @@ class BasicAuth(Auth):
         if isinstance(authorization_header, str):
             tag = "Basic "
             if authorization_header.startswith(tag):
-                return authorization_header[len(tag):]
+                return authorization_header[len(tag) :]
 
         return None
 
@@ -61,7 +61,11 @@ class BasicAuth(Auth):
         if not (isinstance(user_email, str) and isinstance(user_pwd, str)):
             return None
 
-        users = User.search({"email": user_email})
+        try:
+            users = User.search({"email": user_email})
+        except Exception:
+            return None
+
         if not users:
             return None
 
