@@ -20,6 +20,7 @@ def authenticate_user():
         return jsonify({"error": "email missing"}), 400
     if not pwd:
         return jsonify({"error": "password missing"}), 400
+
     try:
         user = User.search({"email": email})[0]
     except Exception:
@@ -36,3 +37,18 @@ def authenticate_user():
         user_resp.set_cookie(sess_cookie, session_id)
 
     return user_resp
+
+
+@app_views.route("/auth_session/logout", methods=["DELETE"])
+def delete_session():
+    """DELETE /auth_session/logout
+
+    Return
+        {}
+    """
+    from api.v1.app import auth
+
+    if not auth.destroy_session(request):
+        abort(404)
+
+    return jsonify({}), 200
