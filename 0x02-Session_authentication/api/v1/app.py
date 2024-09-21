@@ -30,6 +30,7 @@ app.register_blueprint(app_views)
 app.register_error_handler(401, unauthorized)
 app.register_error_handler(403, forbidden_res)
 app.register_error_handler(404, not_found)
+app.url_map.strict_slashes = False
 
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
@@ -57,7 +58,7 @@ def check_auth():
 
     authorization = auth.authorization_header(request)
 
-    if not (authorization and auth.session_cookie(request)):
+    if not (authorization or auth.session_cookie(request)):
         abort(401)
 
     user = auth.current_user(request)
