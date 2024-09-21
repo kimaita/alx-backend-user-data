@@ -38,6 +38,8 @@ auths = {
     "auth": import_module("api.v1.auth.auth").Auth(),
     "basic_auth": import_module("api.v1.auth.basic_auth").BasicAuth(),
     "session_auth": import_module("api.v1.auth.session_auth").SessionAuth(),
+    "session_exp_auth": \
+    import_module("api.v1.auth.session_exp_auth").SessionExpAuth(),
 }
 auth_type = getenv("AUTH_TYPE")
 auth = auths.get(auth_type) if auth_type else None
