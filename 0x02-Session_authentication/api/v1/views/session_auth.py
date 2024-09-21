@@ -22,7 +22,7 @@ def authenticate_user():
         return jsonify({"error": "password missing"}), 400
     try:
         user = User.search({"email": email})[0]
-    except:
+    except Exception:
         return jsonify({"error": "no user found for this email"}), 404
     if not user.is_valid_password(pwd):
         return jsonify({"error": "wrong password"}), 401
