@@ -7,7 +7,7 @@ import uuid
 
 
 class SessionDBAuth(SessionExpAuth):
-    """"""
+    """Manages persisted session data"""
 
     def create_session(self, user_id=None):
         """Creates and stores a new user session
@@ -30,7 +30,7 @@ class SessionDBAuth(SessionExpAuth):
             return
 
     def destroy_session(self, request=None):
-        """Destroys a user session associated with a request coookie"""
+        """Destroys a user session associated with a request cookie"""
         if not request:
             return
         session_id = self.session_cookie(request)
