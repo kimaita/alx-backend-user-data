@@ -38,9 +38,9 @@ auths = {
     "auth": import_module("api.v1.auth.auth").Auth(),
     "basic_auth": import_module("api.v1.auth.basic_auth").BasicAuth(),
     "session_auth": import_module("api.v1.auth.session_auth").SessionAuth(),
-    "session_exp_auth": \
+    "session_exp_auth":
     import_module("api.v1.auth.session_exp_auth").SessionExpAuth(),
-    "session_db_auth": \
+    "session_db_auth":
     import_module("api.v1.auth.session_db_auth").SessionDBAuth(),
 }
 auth_type = getenv("AUTH_TYPE")
