@@ -73,7 +73,7 @@ class Auth:
             return
 
     def get_user_from_session_id(self, session_id: str) -> Optional[User]:
-        """"""
+        """Returns the user associated with `session_id`."""
         if not session_id:
             return
 
@@ -88,5 +88,5 @@ class Auth:
 
         The session_id is set to None
         """
-        if isinstance(user_id, int):
-            self._db.update_user(user_id, session_id=None)
+        # if isinstance(user_id, int):
+        self._db.update_user(user_id, session_id=None)
