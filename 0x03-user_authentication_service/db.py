@@ -57,7 +57,7 @@ class DB:
         """Updates a user's attributes as per kwargs"""
         user = self.find_user_by(id=user_id)
         for attr, val in kwargs.items():
-            if getattr(user, attr):
+            if attr in User.__table__.columns:
                 setattr(user, attr, val)
             else:
                 raise ValueError
