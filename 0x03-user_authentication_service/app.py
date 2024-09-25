@@ -18,9 +18,9 @@ def welcome():
 @app.route("/users", methods=["POST"])
 def register_user():
     """Endpoint for registering a new user"""
+    email = request.form.get("email")
+    pwd = request.form.get("password")
     try:
-        email = request.form.get("email")
-        pwd = request.form.get("password")
         user = AUTH.register_user(email, pwd)
         if user:
             return jsonify({"email": email, "message": "user created"})
