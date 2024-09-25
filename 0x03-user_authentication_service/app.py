@@ -82,10 +82,10 @@ def update_password():
 
     Requires the form fields: "email", "reset_token", "new_password"
     """
+    email = request.form.get("email")
+    token = request.form.get("reset_token")
+    pwd = request.form.get("new_password")
     try:
-        email = request.form.get("email")
-        token = request.form.get("reset_token")
-        pwd = request.form.get("new_password")
         AUTH.update_password(token, pwd)
         return jsonify({"email": email, "message": "Password updated"})
     except ValueError:
