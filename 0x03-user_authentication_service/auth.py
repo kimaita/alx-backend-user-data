@@ -66,11 +66,12 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(email=email)
-            session_id = _generate_uuid()
-            self._db.update_user(user.id, session_id=session_id)
-            return session_id
         except Exception:
             return
+
+        session_id = _generate_uuid()
+        self._db.update_user(user.id, session_id=session_id)
+        return session_id
 
     def get_user_from_session_id(self, session_id: str) -> Optional[User]:
         """Returns the user associated with `session_id`."""
@@ -95,11 +96,12 @@ class Auth:
         """Generates a password reset token for a user"""
         try:
             user = self._db.find_user_by(email=email)
-            token = _generate_uuid()
-            self._db.update_user(user.id, reset_token=token)
-            return token
         except NoResultFound:
             raise ValueError
+
+        token = _generate_uuid()
+        self._db.update_user(user.id, reset_token=token)
+        return token
 
     def update_password(self, reset_token: str, password: str) -> None:
         """Updates a user's password.
@@ -108,11 +110,12 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(reset_token=reset_token)
-            pwd = _hash_password(password)
-            self._db.update_user(
-                user.id,
-                hashed_password=pwd,
-                reset_token=None,
-            )
         except NoResultFound:
             raise ValueError
+
+        pwd = _hash_password(password)
+        self._db.update_user(
+            user.id,
+            hashed_password=pwd,
+            reset_token=None,
+        )
