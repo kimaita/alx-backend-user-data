@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Flask server"""
 
-from flask import Flask, abort, jsonify, request, redirect
+from flask import Flask, abort, jsonify, request, redirect, url_for
 
 from auth import Auth
 
@@ -16,7 +16,7 @@ def welcome():
 
 
 @app.route("/users", methods=["POST"])
-def register_user():
+def users():
     """Endpoint for registering a new user"""
     email = request.form.get("email")
     pwd = request.form.get("password")
@@ -29,7 +29,7 @@ def register_user():
 
 
 @app.route("/sessions", methods=["POST"])
-def login_user():
+def login():
     """Creates a new session for the user"""
     email = request.form.get("email")
     pwd = request.form.get("password")
@@ -43,7 +43,7 @@ def login_user():
 
 
 @app.route("/sessions", methods=["DELETE"])
-def logout_user():
+def logout():
     """Resets a user's session, logging them out"""
     sess = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(sess)
@@ -51,11 +51,11 @@ def logout_user():
         abort(403)
 
     AUTH.destroy_session(user.id)
-    redirect("/")
+    return redirect(url_for("welcome"))
 
 
 @app.route("/profile", methods=["GET"])
-def get_user():
+def profile():
     """"""
     sess = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(sess)
