@@ -64,8 +64,28 @@ def log_out(session_id: str) -> None:
     assert r.json() == {"message": "Bienvenue"}
 
 
-# def reset_password_token(email: str) -> str
-# def update_password(email: str, reset_token: str, new_password: str) -> None
+def reset_password_token(email: str) -> str:
+    """Tests /POST reset_password"""
+    form_data = {"email": email}
+    r = requests.post(f"{API}/reset_password", data=form_data)
+    assert r.status_code == 200
+    resp = r.json()
+    assert resp.get("email") == email
+    token = resp.get("reset_token")
+    assert token
+    return token
+
+
+def update_password(email: str, reset_token: str, new_password: str) -> None:
+    """Tests /PUT reset_password"""
+    form_data = {
+        "email": email,
+        "reset_token": reset_token,
+        "new_password": new_password,
+    }
+    r = requests.put(f"{API}/reset_password", data=form_data)
+    assert r.status_code == 200
+    assert r.json() == {"email": email, "message": "Password updated"}
 
 
 EMAIL = "guillaume@holberton.io"
@@ -80,6 +100,6 @@ if __name__ == "__main__":
     session_id = log_in(EMAIL, PASSWD)
     profile_logged(session_id)
     log_out(session_id)
-    # reset_token = reset_password_token(EMAIL)
-    # update_password(EMAIL, reset_token, NEW_PASSWD)
-    # log_in(EMAIL, NEW_PASSWD)
+    reset_token = reset_password_token(EMAIL)
+    update_password(EMAIL, reset_token, NEW_PASSWD)
+    log_in(EMAIL, NEW_PASSWD)
