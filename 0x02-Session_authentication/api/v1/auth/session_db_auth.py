@@ -9,6 +9,9 @@ import uuid
 class SessionDBAuth(SessionExpAuth):
     """Manages persisted session data"""
 
+    def __init__(self):
+        super().__init__()
+
     def create_session(self, user_id=None):
         """Creates and stores a new user session
 
@@ -39,7 +42,7 @@ class SessionDBAuth(SessionExpAuth):
         user_id = self.user_id_for_session_id(session_id)
         if not user_id:
             return False
-        user = UserSession.get(user_id)
-        user.remove()
+        sess = UserSession.get(user_id)
+        sess.remove()
 
         return True
