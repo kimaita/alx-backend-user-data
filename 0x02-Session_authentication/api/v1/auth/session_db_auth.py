@@ -3,6 +3,7 @@
 
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
+from datetime import datetime, timedelta
 import uuid
 
 
@@ -24,13 +25,26 @@ class SessionDBAuth(SessionExpAuth):
             user_sess.save()
             return sess_id
 
-    def user_id_for_session_id(self, session_id=None):
+    def user_id_for_session_id(self, session_id: str = None):
         """Returns a user ID associated a session ID"""
+
         try:
-            user = UserSession.search({"session_id": session_id})[0]
-            return user.id
+            user_sess = UserSession.search({"session_id": session_id})[0]
         except Exception:
             return
+
+        if self.session_duration <= 0:
+            return user_sess.user_id
+
+        created = user_sess.created_at
+        if not created:
+            return
+
+        expiry = created + timedelta(seconds=self.session_duration)
+        if expiry <= datetime.utcnow():
+            return None
+
+        return user_sess.user_id
 
     def destroy_session(self, request=None):
         """Destroys a user session associated with a request cookie"""
