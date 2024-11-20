@@ -20,4 +20,4 @@ def filter_datum(
         str: obfuscated message
     """
     pattern = re.compile(f"({'|'.join(fields)})=([^{separator}]*)")
-    return pattern.sub(f"\\1={redaction}", message)
+    return re.sub(pattern, f"\\1={redaction}", message)
