@@ -4,7 +4,7 @@
 import bcrypt
 
 
-def hash_passsword(password: str) -> bytes:
+def hash_password(password: str) -> bytes:
     """Returns a salted hash of `password`
 
     Args:
