@@ -71,10 +71,25 @@ class RedactingFormatter(logging.Formatter):
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
-    """"""
+    """Returns a mysql connection configured from environment variables"""
     return mysql.connector.connect(
         host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
         user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
         password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
-        database=os.getenv("PERSONAL_DATA_DB_NAME", "holberton"),
+        database=os.getenv("PERSONAL_DATA_DB_NAME"),
     )
+
+
+def main():
+    """Script entry point"""
+    logger = get_logger()
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users;")
+    for user in cursor:
+        message = " ".join([f"{col}={value};" for col, value in user.items()])
+        logger.info(message)
+
+
+if __name__ == "__main__":
+    main()
