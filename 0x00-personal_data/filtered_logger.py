@@ -2,8 +2,11 @@
 """Obfuscates fields in log messages"""
 
 import logging
+import os
 import re
 from typing import List
+
+import mysql.connector
 
 PII_FIELDS = ("email", "phone", "ssn", "name", "password")
 
@@ -65,3 +68,13 @@ class RedactingFormatter(logging.Formatter):
             message=logline,
             separator=self.SEPARATOR,
         )
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """"""
+    return mysql.connector.connect(
+        host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
+        user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
+        password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
+        database=os.getenv("PERSONAL_DATA_DB_NAME", "holberton"),
+    )
